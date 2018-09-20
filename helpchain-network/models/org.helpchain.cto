@@ -1,0 +1,123 @@
+/**
+ * Write your model definitions here
+ */
+
+namespace org.helpchain
+
+enum TipoPers{
+  o FISICA
+  o MORAL
+}
+
+enum TipoNac{
+  o NACIONAL
+  o EXTRANJERO
+}
+
+enum TipoReg{
+  o GOBIERNO
+  o ENTIDAD
+}
+
+enum TipoSol{
+  o INDIVIDUAL
+  o COMUNIDAD
+  o ORGANIZACION
+}
+
+enum Causa{
+  o SALUD
+  o VIVIENDA
+  o EDUCACION
+  o EMERGENCIA
+  o ANIMALES
+}
+
+enum EstadoFondos{
+  o POR_ASIGNAR
+  o POR_ENTREGAR
+  o ENTREGADOS
+  o POR_REUTILIZAR
+}
+
+enum EstadoCadena{
+  o EN_REVISION
+  o VALIDA
+  o ACTIVA
+  o COMPLETADA
+  o ROTA
+}
+
+enum EstadoCumplimiento{
+  o VERDE
+  o AMARILLO
+  o ROJO
+}
+
+abstract concept Meta{
+  o Integer duracionPrimerEslabon default=1 range=[1,30]
+  o Integer porcentajePrimerEslabon default=10 range=[10,50]
+}
+
+concept MetaCorta extends Meta{
+  o Integer duracionEslabones default=1 range=[1,30]
+  o Integer numEslabones default=1 range=[1,2]
+  o Integer porcentajeEslabones default=90 range=[50,90]
+}
+
+concept MetaLarga extends Meta{
+  o Integer duracionEslabones default=1 range=[1,60]
+  o Integer numEslabones default=3 range=[3,5]
+  o Integer porcentajeEslabones default=30 range=[10,30]
+}
+
+abstract participant usuario{
+  o String alias optional
+}
+
+participant Aportante identified by aportanteID extends usuario {
+  o String aportanteID
+  o TipoPers tipo
+  o TipoNac  nacionalidad
+  o Boolean recibo
+  //o Fondos[] fondos
+}
+
+participant Solicitante identified by solicitanteID extends usuario {
+  o String solicitanteID
+  o TipoSol tipo
+  //o Cadena[] proyectos
+}
+
+participant Regulador identified by reguladorID extends usuario {
+  o String reguladorID
+  o TipoReg tipo
+  }
+
+
+
+
+
+
+participant SampleParticipant identified by participantId {
+  o String participantId
+  o String firstName
+  o String lastName
+}
+
+asset SampleAsset identified by assetId {
+  o String assetId
+  --> SampleParticipant owner
+  o String value
+}
+
+transaction SampleTransaction {
+  --> SampleAsset asset
+  o String newValue
+}
+
+event SampleEvent {
+  --> SampleAsset asset
+  o String oldValue
+  o String newValue
+}
