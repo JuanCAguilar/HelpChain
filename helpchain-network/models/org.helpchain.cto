@@ -33,7 +33,7 @@ enum Causa{
   o ANIMALES
 }
 
-enum EstadoFondos{
+enum EstadoDonativo{
   o POR_ASIGNAR
   o POR_ENTREGAR
   o ENTREGADOS
@@ -71,8 +71,27 @@ concept MetaLarga extends Meta{
   o Integer porcentajeEslabones default=30 range=[10,30]
 }
 
+concept Fondos {
+  o String Saldo
+  o Donativo[] donaciones
+}
+
+asset Donativo identified by donativoID {
+  o String donativoID
+  o Double monto
+  o EstadoDonativo estado
+  --> Aportante donador
+  --> Solicitante solicitante
+  --> Cadena cadena
+}
+
+asset Cadena identified by assetKey {
+  o String assetKey
+}
+
 abstract participant usuario{
   o String alias optional
+  o String nombre
 }
 
 participant Aportante identified by aportanteID extends usuario {
@@ -80,19 +99,26 @@ participant Aportante identified by aportanteID extends usuario {
   o TipoPers tipo
   o TipoNac  nacionalidad
   o Boolean recibo
-  //o Fondos[] fondos
+  o Fondos fondos
 }
 
 participant Solicitante identified by solicitanteID extends usuario {
   o String solicitanteID
   o TipoSol tipo
-  //o Cadena[] proyectos
+  o Cadena[] proyectos
 }
 
 participant Regulador identified by reguladorID extends usuario {
   o String reguladorID
   o TipoReg tipo
   }
+
+
+
+
+
+
+
 
 
 
