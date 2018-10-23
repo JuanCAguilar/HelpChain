@@ -2,6 +2,7 @@
 /**
  * Sample access control list.
  */
+
 rule EverybodyCanReadEverything {
     description: "Allow all participants read access to all resources"
     participant: "org.helpchain.SampleParticipant"
@@ -49,4 +50,14 @@ rule NetworkAdminSystem {
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
+}
+
+rule historianAccess{
+  description: "Only allow members to read historian records referencing transactions they submitted."
+  participant(p): "org.ibm.coffee.Business"
+  operation: READ
+  resource(r): "org.hyperledger.composer.system.HistorianRecord"
+  condition: (r.participantInvoking.getIdentifier() == p.getIdentifier())
+  action: ALLOW
+
 }
