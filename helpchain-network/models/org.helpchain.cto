@@ -157,7 +157,17 @@ transaction ValidarCausa extends transferencia {
 //Eventos
 
 
+event getSolicitud {
+  o String detail
+}
 
+event getDonacion {
+  o String detail
+}
+
+event getSaldo {
+  o String detail
+}
 
 
 
