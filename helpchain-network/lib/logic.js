@@ -29,3 +29,46 @@ async function sampleTransaction(tx) {
     event.newValue = tx.newValue;
     emit(event);
 }
+
+
+
+
+/**
+ * Crear Solicitud
+ * @param {org.helpchain.CrearSolicitud} crearSolicitud
+ * @transaction
+ */
+
+ async function crearSolicitud(info){
+
+ }
+
+ /**
+ * Donar
+ * @param {org.helpchain.Donar} donar
+ * @transaction
+ */
+
+async function Donar(info){
+     
+}
+
+/**
+ * Agregar Saldo
+ * @param {org.helpchain.AgregarSaldo} agregarSaldo
+ * @transaction
+ */
+
+async function agregarSaldo(info){
+     
+}
+
+/**
+ * Validar Causa
+ * @param {org.helpchain.ValidarCausa} validarCausa
+ * @transaction
+ */
+
+async function validarCausa(info){
+     
+}

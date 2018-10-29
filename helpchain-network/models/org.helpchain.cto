@@ -4,6 +4,10 @@
 
 namespace org.helpchain
 
+
+
+//Enums + concepts
+
 enum TipoPers{
   o FISICA
   o MORAL
@@ -71,58 +75,93 @@ concept MetaLarga extends Meta{
   o Integer porcentajeEslabones default=30 range=[10,30]
 }
 
-concept Fondos {
-  o String Saldo
-  o Donativo[] donaciones
-}
+
+//Assets
+
 
 asset Donativo identified by donativoID {
   o String donativoID
   o Double monto
   o EstadoDonativo estado
-  --> Aportante donador
-  --> Solicitante solicitante
+  --> Usuario aportante
   --> Cadena cadena
 }
 
-asset Cadena identified by assetKey {
-  o String assetKey
+asset Cadena identified by cadID {
+  o String cadID
+  o Causa causa
+  o EstadoCadena estCad
+  o EstadoCumplimiento estCump
+  --> Usuario solicitante
 }
 
-abstract participant usuario{
+
+//Participants
+
+abstract participant Usuario{
   o String alias optional
   o String nombre
 }
 
-participant Aportante identified by aportanteID extends usuario {
+participant Aportante identified by aportanteID extends Usuario {
   o String aportanteID
   o TipoPers tipo
   o TipoNac  nacionalidad
   o Boolean recibo
-  o Fondos fondos
+  o Double Saldo
+  o Donativo[] donaciones
 }
 
-participant Solicitante identified by solicitanteID extends usuario {
+participant Solicitante identified by solicitanteID extends Usuario {
   o String solicitanteID
   o TipoSol tipo
   o Cadena[] proyectos
 }
 
-participant Regulador identified by reguladorID extends usuario {
+participant Regulador identified by reguladorID extends Usuario {
   o String reguladorID
   o TipoReg tipo
   }
 
 
 
+//Transacciones
+
+
+abstract transaction transferencia {
+  o String usuarioID
+}
+
+transaction CrearSolicitud {
+  o Causa causa
+  --> Usuario solicitante
+}
+
+transaction Donar extends transferencia{
+  o Double monto
+  --> Usuario aportante
+  --> Cadena cadena
+}
+
+transaction AgregarSaldo {
+    o Double saldo
+  --> Usuario aportante
+}
+
+transaction ValidarCausa extends transferencia {
+  --> Usuario solicitante
+}
+
+
+
+//Eventos
 
 
 
 
 
 
-
-
+//Autogenerado
 
 
 participant SampleParticipant identified by participantId {
