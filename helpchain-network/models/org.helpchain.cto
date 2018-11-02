@@ -45,7 +45,7 @@ enum EstadoDonativo{
 }
 
 //Distintos estados que puede tener una cadena
-enum EstadoCadena{
+enum EstadoProyecto{
   o EN_REVISION
   o VALIDA
   o ACTIVA
@@ -81,23 +81,33 @@ concept MetaLarga extends Meta{
   o Integer porcentajeEslabones default=30 range=[10,30]
 }
 
+//Componentes de un eslabon
+concept Eslabon {
+  o String a
+}
+
+
 
 //Activos
 
-
+//Componentes de una donacion realizada por parte de un aportante hacia un proyecto
 asset Donativo identified by donativoID {
   o String donativoID
   o Double monto
   o EstadoDonativo estado
   --> Usuario aportante
-  --> Cadena cadena
+  --> Proyecto proyecto
 }
 
-asset Cadena identified by cadID {
-  o String cadID
+//Componentes de un proyecto generado por un solicitante para recaudar dinero
+asset Proyecto identified by pID {
+  o String pID
   o Causa causa
-  o EstadoCadena estCad
+  o Meta meta
+  o Eslabon[] cad
+  o EstadoProyecto estProy
   o EstadoCumplimiento estCump
+  o DateTime fechaInicio
   --> Usuario solicitante
 }
 
@@ -120,7 +130,7 @@ participant Aportante identified by aportanteID extends Usuario {
 participant Solicitante identified by solicitanteID extends Usuario {
   o String solicitanteID
   o TipoSol tipo
-  o Cadena[] proyectos
+  o Proyecto[] proyectos
 }
 
 participant Regulador identified by reguladorID extends Usuario {
@@ -149,7 +159,7 @@ transaction CrearSolicitud extends transferencia{
 transaction Donar extends transferencia{
   o Double monto
   --> Usuario aportante
-  --> Cadena cadena
+  --> Proyecto proyecto
 }
 
 transaction AgregarSaldo extends transferencia{
