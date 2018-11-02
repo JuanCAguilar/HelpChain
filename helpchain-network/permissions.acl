@@ -52,6 +52,7 @@ rule NetworkAdminSystem {
     action: ALLOW
 }
 
+
 rule historianAccess{
   description: "Only allow members to read historian records referencing transactions they submitted."
   participant(p): "org.helpchain.*"
@@ -60,4 +61,59 @@ rule historianAccess{
   condition: (r.participantInvoking.getIdentifier() == p.getIdentifier())
   action: ALLOW
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Permisos para invocar transacciones
+
+rule Usuario_Crear_Solicitud {
+    description: "Otorga acceso a Usuarios a invocar la transaccion de CrearSolicitud"
+    participant: "org.helpchain.Usuario"
+    operation: CREATE
+    resource: "org.helpchain.CrearSolicitud"
+    action: ALLOW
+}
+
+rule Operador_Validar_Proyecto {
+    description: "Otorga acceso a Operadores a invocar la transaccion de ValidarProyecto"
+    participant: "org.helpchain.Operador"
+    operation: READ,UPDATE
+    resource: "org.helpchain.ValidarProyecto"
+    action: ALLOW
+}
+
+rule Usuario_Crear_Donativo {
+    description: "Otorga acceso a Usuarios a invocar la transaccion de Donar"
+    participant: "org.helpchain.Usuario"
+    operation: CREATE
+    resource: "org.helpchain.Donar"
+    action: ALLOW
+}
+
+rule Usuario_Agregar_Saldo {
+    description: "Otorga acceso a Usuarios a invocar la transaccion de AgregarSaldo"
+    participant: "org.helpchain.Usuario"
+    operation: UPDATE
+    resource: "org.helpchain.AgregarSaldo"
+    action: ALLOW
 }

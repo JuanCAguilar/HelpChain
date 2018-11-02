@@ -6,23 +6,23 @@ namespace org.helpchain
 
 
 
-//Enums + concepts
+//Enumeraciones y conceptos
 
+
+
+//Tipos de personas
 enum TipoPers{
   o FISICA
   o MORAL
 }
 
-enum TipoNac{
-  o NACIONAL
-  o EXTRANJERO
-}
-
+//Tipos de reguladores
 enum TipoReg{
   o GOBIERNO
   o ENTIDAD
 }
 
+//Tipo de Solicitante
 enum TipoSol{
   o INDIVIDUAL
   o COMUNIDAD
@@ -30,13 +30,13 @@ enum TipoSol{
 }
 
 enum Causa{
-  o SALUD
-  o VIVIENDA
+  o DESASTRES
+  o VIVIENDAS
   o EDUCACION
-  o EMERGENCIA
-  o ANIMALES
+  o SALUD
 }
 
+//Distintos estados que puede tener un donativo
 enum EstadoDonativo{
   o POR_ASIGNAR
   o POR_ENTREGAR
@@ -44,6 +44,7 @@ enum EstadoDonativo{
   o POR_REUTILIZAR
 }
 
+//Distintos estados que puede tener una cadena
 enum EstadoCadena{
   o EN_REVISION
   o VALIDA
@@ -52,23 +53,28 @@ enum EstadoCadena{
   o ROTA
 }
 
+//Estado de la cadena dependiendo del cumplimiento del solicitante
 enum EstadoCumplimiento{
   o VERDE
   o AMARILLO
   o ROJO
 }
 
+
+//Regla general para una meta. Primer eslabon no puede superar el mes ni el 50% de la recaudacion 
 abstract concept Meta{
   o Integer duracionPrimerEslabon default=1 range=[1,30]
   o Integer porcentajePrimerEslabon default=10 range=[10,50]
 }
 
+//Opciones de meta corta
 concept MetaCorta extends Meta{
   o Integer duracionEslabones default=1 range=[1,30]
   o Integer numEslabones default=1 range=[1,2]
   o Integer porcentajeEslabones default=90 range=[50,90]
 }
 
+//Opciones de meta larga
 concept MetaLarga extends Meta{
   o Integer duracionEslabones default=1 range=[1,60]
   o Integer numEslabones default=3 range=[3,5]
@@ -76,7 +82,7 @@ concept MetaLarga extends Meta{
 }
 
 
-//Assets
+//Activos
 
 
 asset Donativo identified by donativoID {
@@ -96,7 +102,7 @@ asset Cadena identified by cadID {
 }
 
 
-//Participants
+//Participantes
 
 abstract participant Usuario{
   o String alias optional
@@ -106,7 +112,6 @@ abstract participant Usuario{
 participant Aportante identified by aportanteID extends Usuario {
   o String aportanteID
   o TipoPers tipo
-  o TipoNac  nacionalidad
   o Boolean recibo
   o Double Saldo
   o Donativo[] donaciones
@@ -123,6 +128,10 @@ participant Regulador identified by reguladorID extends Usuario {
   o TipoReg tipo
   }
 
+participant Operador identified by operadorID extends Usuario {
+  o String operadorID
+}
+
 
 
 //Transacciones
@@ -132,7 +141,7 @@ abstract transaction transferencia {
   o String usuarioID
 }
 
-transaction CrearSolicitud {
+transaction CrearSolicitud extends transferencia{
   o Causa causa
   --> Usuario solicitante
 }
@@ -143,12 +152,12 @@ transaction Donar extends transferencia{
   --> Cadena cadena
 }
 
-transaction AgregarSaldo {
+transaction AgregarSaldo extends transferencia{
     o Double saldo
   --> Usuario aportante
 }
 
-transaction ValidarCausa extends transferencia {
+transaction ValidarProyecto extends transferencia {
   --> Usuario solicitante
 }
 
@@ -168,6 +177,22 @@ event getDonacion {
 event getSaldo {
   o String detail
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
