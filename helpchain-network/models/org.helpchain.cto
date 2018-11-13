@@ -29,6 +29,7 @@ enum TipoSol{
   o ORGANIZACION
 }
 
+//Tipos de causas a tratar
 enum Causa{
   o DESASTRES
   o VIVIENDAS
@@ -67,23 +68,27 @@ abstract concept Meta{
   o Integer porcentajePrimerEslabon default=10 range=[10,50]
 }
 
-//Opciones de meta corta
+//Opciones de meta corta.
+//Tiempo min: 1 Dia + Primer Eslabon [1,30]
+//Tiempo max: 2 meses
 concept MetaCorta extends Meta{
   o Integer duracionEslabones default=1 range=[1,30]
   o Integer numEslabones default=1 range=[1,2]
-  o Integer porcentajeEslabones default=90 range=[50,90]
+  o Integer porcentajeEslabon default=90 range=[0,90]
 }
 
 //Opciones de meta larga
 concept MetaLarga extends Meta{
   o Integer duracionEslabones default=1 range=[1,60]
   o Integer numEslabones default=3 range=[3,5]
-  o Integer porcentajeEslabones default=30 range=[10,30]
+  o Integer porcentajeEslabon default=30 range=[0,30]
 }
 
-//Componentes de un eslabon
+//Componentes de un eslabon que conforman una cadena
 concept Eslabon {
-  o String a
+  o EstadoCumplimiento estCump
+  o DateTime fechaInicio
+  o DateTime fechaFin
 }
 
 
@@ -106,7 +111,6 @@ asset Proyecto identified by pID {
   o Meta meta
   o Eslabon[] cad
   o EstadoProyecto estProy
-  o EstadoCumplimiento estCump
   o DateTime fechaInicio
   --> Usuario solicitante
 }
