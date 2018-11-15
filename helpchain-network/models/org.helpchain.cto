@@ -37,6 +37,7 @@ enum Causa{
   o SALUD
 }
 
+/*  //Revisar
 //Distintos estados que puede tener un donativo
 enum EstadoDonativo{
   o POR_ASIGNAR
@@ -44,6 +45,7 @@ enum EstadoDonativo{
   o ENTREGADOS
   o POR_REUTILIZAR
 }
+*/
 
 //Distintos estados que puede tener una cadena
 enum EstadoProyecto{
@@ -95,16 +97,7 @@ concept Eslabon {
 
 
 
-//Activos
-
-//Componentes de una donacion realizada por parte de un aportante hacia un proyecto
-asset Donativo identified by donativoID {
-  o String donativoID
-  o Double monto
-  o EstadoDonativo estado
-  --> Usuario aportante
-  --> Proyecto proyecto
-}
+//Activo
 
 //Componentes de un proyecto generado por un solicitante para recaudar dinero
 asset Proyecto identified by pID {
@@ -114,8 +107,9 @@ asset Proyecto identified by pID {
   o Meta meta
   o Eslabon[] cadena  optional  //Se necesita validar para que se de inicio a la cadena
   o Double MontoMetaTotal  //La cantidad de dinero total que necesita recaudar
+  o CrearDonativo[] donacionesRecibidas
   o EstadoProyecto eP
-  o DateTime fechaInicio 
+  o String fechaInicio 
   --> Usuario solicitante
   --> Operador operadorAsignado
 }
@@ -136,13 +130,13 @@ participant Usuario identified by userID extends User{
   o TipoPers tipo   //No se si siga aplicando
   o Boolean recibo
   o Double Saldo
-  o Donativo[] donaciones
+//  o Donativo[] donacionesEmitidas
   o Double MontoDonadoHistorico
   o Double MontoAsignadoHistorico
 
   //El lado del solicitante
   o TipoSol tipoSol //Quiza se podria fusionar TipoPers Y TipoSol
-  o Proyecto[] proyectos
+//  o Proyecto[] proyectos
   o Double MontoRecibidoHistorico
 
 }
@@ -154,7 +148,6 @@ participant Regulador identified by reguladorID extends User{
 
 participant Operador identified by operadorID extends User{
   o String operadorID
-  o 
 }
 
 //Antigua Separacion
@@ -179,28 +172,27 @@ participant Solicitante identified by solicitanteID{
 
 
 abstract transaction transferencia {
-  o String usuarioID
+  --> Usuario usuario
 }
 
 transaction CrearSolicitud extends transferencia{
   o Causa causa
-  --> Usuario solicitante
 }
 
-transaction Donar extends transferencia{
+transaction CrearDonativo extends transferencia{
+  o String fecha
   o Double monto
-  --> Usuario aportante
   --> Proyecto proyecto
+
+ // o EstadoDonativo estado
 }
 
 transaction AgregarSaldo extends transferencia{
     o Double saldo
-  --> Usuario aportante
 }
 
 transaction ValidarProyecto extends transferencia {
-  --> Usuario solicitante
-  --> Operador operador
+  --> Proyecto proyecto
 }
 
 

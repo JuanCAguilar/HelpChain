@@ -106,7 +106,7 @@ rule Usuario_Crear_Donativo {
     description: "Otorga acceso a Usuarios a invocar la transaccion de Donar"
     participant: "org.helpchain.Usuario"
     operation: CREATE
-    resource: "org.helpchain.Donar"
+    resource: "org.helpchain.CrearDonativo"
     action: ALLOW
 }
 
