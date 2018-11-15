@@ -87,8 +87,10 @@ concept MetaLarga extends Meta{
 //Componentes de un eslabon que conforman una cadena
 concept Eslabon {
   o EstadoCumplimiento estCump
-  o DateTime fechaInicio
-  o DateTime fechaFin
+  o DateTime fechaInicio optional //Se colocan opcionales para ser insertados
+  o DateTime fechaFin optional    //despues y no al inicio
+  o Double montoMeta
+  o Double recaudacion
 }
 
 
@@ -107,23 +109,57 @@ asset Donativo identified by donativoID {
 //Componentes de un proyecto generado por un solicitante para recaudar dinero
 asset Proyecto identified by pID {
   o String pID
+  o String nombre
   o Causa causa
   o Meta meta
-  o Eslabon[] cad
-  o EstadoProyecto estProy
-  o DateTime fechaInicio
+  o Eslabon[] cadena  optional  //Se necesita validar para que se de inicio a la cadena
+  o Double MontoMetaTotal  //La cantidad de dinero total que necesita recaudar
+  o EstadoProyecto eP
+  o DateTime fechaInicio 
   --> Usuario solicitante
+  --> Operador operadorAsignado
 }
 
 
 //Participantes
 
-abstract participant Usuario{
-  o String alias optional
+
+abstract participant User{
   o String nombre
+  o String alias optional
 }
 
-participant Aportante identified by aportanteID extends Usuario {
+participant Usuario identified by userID extends User{
+  o String userID
+
+  //El lado del aportante
+  o TipoPers tipo   //No se si siga aplicando
+  o Boolean recibo
+  o Double Saldo
+  o Donativo[] donaciones
+  o Double MontoDonadoHistorico
+  o Double MontoAsignadoHistorico
+
+  //El lado del solicitante
+  o TipoSol tipoSol //Quiza se podria fusionar TipoPers Y TipoSol
+  o Proyecto[] proyectos
+  o Double MontoRecibidoHistorico
+
+}
+
+participant Regulador identified by reguladorID extends User{
+  o String reguladorID
+  o TipoReg tipo
+  }
+
+participant Operador identified by operadorID extends User{
+  o String operadorID
+  o 
+}
+
+//Antigua Separacion
+/*
+participant Aportante identified by aportanteID {
   o String aportanteID
   o TipoPers tipo
   o Boolean recibo
@@ -131,20 +167,11 @@ participant Aportante identified by aportanteID extends Usuario {
   o Donativo[] donaciones
 }
 
-participant Solicitante identified by solicitanteID extends Usuario {
+participant Solicitante identified by solicitanteID{
   o String solicitanteID
-  o TipoSol tipo
-  o Proyecto[] proyectos
-}
 
-participant Regulador identified by reguladorID extends Usuario {
-  o String reguladorID
-  o TipoReg tipo
-  }
-
-participant Operador identified by operadorID extends Usuario {
-  o String operadorID
 }
+*/
 
 
 
@@ -173,6 +200,7 @@ transaction AgregarSaldo extends transferencia{
 
 transaction ValidarProyecto extends transferencia {
   --> Usuario solicitante
+  --> Operador operador
 }
 
 
