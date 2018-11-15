@@ -88,7 +88,7 @@ concept MetaLarga extends Meta{
 
 //Componentes de un eslabon que conforman una cadena
 concept Eslabon {
-  o EstadoCumplimiento estCump
+  o EstadoCumplimiento estCump default = "VERDE"
   o DateTime fechaInicio optional //Se colocan opcionales para ser insertados
   o DateTime fechaFin optional    //despues y no al inicio
   o Double montoMeta
@@ -103,18 +103,21 @@ concept Eslabon {
 asset Proyecto identified by pID {
   o String pID
   o String nombre
+  o String fechaInicio 
   o Causa causa
   o Meta meta
   o Eslabon[] cadena  optional  //Se necesita validar para que se de inicio a la cadena
   o Double montoMetaTotal  //La cantidad de dinero total que necesita recaudar
-  o CrearDonativo[] donacionesRecibidas
-  o String fechaInicio 
-  --> Usuario solicitante //Due;o del proyecto
+  o CrearDonativo[] donacionesRecibidas optional
 
 
   //Operador
-  o ValidarProyecto[] operadoresAsignados
-  o EstadoProyecto eP
+  o ValidarProyecto[] operadoresAsignados optional
+  o EstadoProyecto eP default = "EN_REVISION"
+
+
+  //Due;o del proyecto
+  --> Usuario solicitante
   }
 
 
@@ -174,15 +177,20 @@ participant Solicitante identified by solicitanteID{
 //Transacciones
 
 
-abstract transaction transferencia {
+abstract transaction Transferencia {
   --> Proyecto proyecto
 }
 
 transaction CrearSolicitud{
+  --> Usuario solicitante
+  o String nombre
   o Causa causa
+  o Meta meta
+  o Double montoMetaTotal
 }
 
-transaction CrearDonativo extends transferencia{
+transaction CrearDonativo extends Transferencia{
+  --> Usuario aportante
   o String fecha
   o Double monto
 
@@ -190,10 +198,11 @@ transaction CrearDonativo extends transferencia{
 }
 
 transaction AgregarSaldo {
+    --> Usuario aportante
     o Double cantidad
 }
 
-transaction ValidarProyecto extends transferencia {
+transaction ValidarProyecto extends Transferencia {
 }
 
 
@@ -202,10 +211,16 @@ transaction ValidarProyecto extends transferencia {
 
 
 event getSolicitud {
-  o String detail
+  o String pID
+  o String nombre
+  o String fechaInicio 
+  o Causa causa
+  o Meta meta
+  o Double montoMetaTotal
+  --> Usuario solicitante
 }
 
-event getDonacion {
+event getDonativo {
   o String detail
 }
 
