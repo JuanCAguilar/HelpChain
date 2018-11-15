@@ -3,31 +3,27 @@
  * Sample access control list.
  */
 
+
+//Todos los usuarios pueden leer todo
 rule EverybodyCanReadEverything {
     description: "Allow all participants read access to all resources"
-    participant: "org.helpchain.SampleParticipant"
+    participant: "org.helpchain.User"
     operation: READ
     resource: "org.helpchain.*"
     action: ALLOW
 }
 
-rule EverybodyCanSubmitTransactions {
-    description: "Allow all participants to submit transactions"
-    participant: "org.helpchain.SampleParticipant"
-    operation: CREATE
-    resource: "org.helpchain.SampleTransaction"
-    action: ALLOW
-}
-
+//Permite acceso completo al proyecto
 rule OwnerHasFullAccessToTheirAssets {
     description: "Allow all participants full access to their assets"
-    participant(p): "org.helpchain.SampleParticipant"
+    participant(p): "org.helpchain.Usuario"
     operation: ALL
-    resource(r): "org.helpchain.SampleAsset"
-    condition: (r.owner.getIdentifier() === p.getIdentifier())
+    resource(r): "org.helpchain.Proyecto"
+    condition: (r.solicitante.getIdentifier() === p.getIdentifier())
     action: ALLOW
 }
 
+/*
 rule SystemACL {
   description:  "System ACL to permit all access"
   participant: "org.hyperledger.composer.system.Participant"
@@ -35,6 +31,7 @@ rule SystemACL {
   resource: "org.hyperledger.composer.system.**"
   action: ALLOW
 }
+*/
 
 rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
@@ -62,24 +59,6 @@ rule historianAccess{
   action: ALLOW
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

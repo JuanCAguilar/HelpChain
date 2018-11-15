@@ -47,7 +47,7 @@ enum EstadoDonativo{
 }
 */
 
-//Distintos estados que puede tener una cadena
+//Distintos estados que puede tener un proyecto
 enum EstadoProyecto{
   o EN_REVISION
   o VALIDA
@@ -106,13 +106,16 @@ asset Proyecto identified by pID {
   o Causa causa
   o Meta meta
   o Eslabon[] cadena  optional  //Se necesita validar para que se de inicio a la cadena
-  o Double MontoMetaTotal  //La cantidad de dinero total que necesita recaudar
+  o Double montoMetaTotal  //La cantidad de dinero total que necesita recaudar
   o CrearDonativo[] donacionesRecibidas
-  o EstadoProyecto eP
   o String fechaInicio 
-  --> Usuario solicitante
-  --> Operador operadorAsignado
-}
+  --> Usuario solicitante //Due;o del proyecto
+
+
+  //Operador
+  o ValidarProyecto[] operadoresAsignados
+  o EstadoProyecto eP
+  }
 
 
 //Participantes
@@ -129,15 +132,15 @@ participant Usuario identified by userID extends User{
   //El lado del aportante
   o TipoPers tipo   //No se si siga aplicando
   o Boolean recibo
-  o Double Saldo
+  o Double saldo
 //  o Donativo[] donacionesEmitidas
-  o Double MontoDonadoHistorico
-  o Double MontoAsignadoHistorico
+  o Double montoDonadoHistorico
+  o Double montoAsignadoHistorico
 
   //El lado del solicitante
   o TipoSol tipoSol //Quiza se podria fusionar TipoPers Y TipoSol
 //  o Proyecto[] proyectos
-  o Double MontoRecibidoHistorico
+  o Double montoRecibidoHistorico
 
 }
 
@@ -172,27 +175,25 @@ participant Solicitante identified by solicitanteID{
 
 
 abstract transaction transferencia {
-  --> Usuario usuario
+  --> Proyecto proyecto
 }
 
-transaction CrearSolicitud extends transferencia{
+transaction CrearSolicitud{
   o Causa causa
 }
 
 transaction CrearDonativo extends transferencia{
   o String fecha
   o Double monto
-  --> Proyecto proyecto
 
  // o EstadoDonativo estado
 }
 
-transaction AgregarSaldo extends transferencia{
-    o Double saldo
+transaction AgregarSaldo {
+    o Double cantidad
 }
 
 transaction ValidarProyecto extends transferencia {
-  --> Proyecto proyecto
 }
 
 
@@ -213,45 +214,3 @@ event getSaldo {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Autogenerado
-
-
-participant SampleParticipant identified by participantId {
-  o String participantId
-  o String firstName
-  o String lastName
-}
-
-asset SampleAsset identified by assetId {
-  o String assetId
-  --> SampleParticipant owner
-  o String value
-}
-
-transaction SampleTransaction {
-  --> SampleAsset asset
-  o String newValue
-}
-
-event SampleEvent {
-  --> SampleAsset asset
-  o String oldValue
-  o String newValue
-}
