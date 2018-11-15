@@ -225,7 +225,8 @@ event getDonativo {
 }
 
 event getSaldo {
-  o String detail
+  o Double cantidad
+  --> Usuario usuario
 }
 
 
